@@ -15,7 +15,8 @@ public class ProxyTest {
 //		hello.print(" All the test");
 //		hello.sayHello(" Denny");
 		hello2.sayHello("Hello2");
-		hello2.sayHello("very good");
+		hello2.sayHello("from","to");
+		hello2.print("very good");
 				
 	}
 }

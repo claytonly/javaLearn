@@ -8,7 +8,9 @@ public class HelloImpl implements IHello{
 		System.out.println("Say hello to " + to);
 		
 	}
-
+	public void sayHello(String to,String from){
+		System.out.println(from+" Say hello to " + to);
+	}
 	@Override
 	public void print(String p) {
 		// TODO Auto-generated method stub
