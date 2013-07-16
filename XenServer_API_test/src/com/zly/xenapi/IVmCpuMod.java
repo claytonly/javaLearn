@@ -1,9 +1,10 @@
-package com.zly.xenserver_api;
+package com.zly.xenapi;
 
 import org.apache.xmlrpc.XmlRpcException;
 
 import com.xensource.xenapi.Types.BadServerResponse;
 import com.xensource.xenapi.Types.XenAPIException;
+
 
 /**
  * @author zenglingying

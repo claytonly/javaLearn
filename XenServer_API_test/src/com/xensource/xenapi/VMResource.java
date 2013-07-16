@@ -1,28 +1,55 @@
-package com.zly.xenserver_api;
+package com.xensource.xenapi;
 
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Iterator;
+import java.util.Map;
 
 import java.util.Set;
 
 import org.apache.xmlrpc.XmlRpcException;
 
 import com.xensource.xenapi.Types.BadServerResponse;
+import com.xensource.xenapi.Types.SessionAuthenticationFailed;
 import com.xensource.xenapi.Types.XenAPIException;
-import com.xensource.xenapi.VM;
+import com.zly.xenapi.IVmCpuMod;
+import com.zly.xenapi.IVmMemMod;
+import com.zly.xenapi.IXenServerConfig;
+
 
 /**
  * @author zenglingying
  * @version 创建时间：2013-7-16 上午10:08:52 类说明
  */
-public class VMResource extends XenServerConfig implements IVmCpuMod, IVmMemMod {
+public class VMResource extends XenAPIObject implements IXenServerConfig, IVmCpuMod, IVmMemMod {
 
 	private VM vm;
+	private String ref;
+	static public Connection con;
 	
-	public VMResource() {
-
+	static {
+	try {
+		con = new Connection(new URL("http://"+XenServerMaster));
+		Session.loginWithPassword(con, userName, password, version);
+	} catch (MalformedURLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (BadServerResponse e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (SessionAuthenticationFailed e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (XenAPIException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (XmlRpcException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 	}
 
+	}
 	public VMResource(String vmName) {
 		try {
 			vm = getVMByName(vmName);
@@ -37,7 +64,24 @@ public class VMResource extends XenServerConfig implements IVmCpuMod, IVmMemMod 
 			e.printStackTrace();
 		}
 	}
-
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj != null && obj instanceof VM)
+        {
+        	VMResource other = (VMResource) obj;
+            return other.ref.equals(this.ref);
+        } else
+        {
+            return false;
+        }
+    }
+    
+	@Override
+	public String toWireString() {
+		// TODO Auto-generated method stub
+		return this.ref;
+	}
 	static public String getVmUuid(String vmName) throws BadServerResponse,
 			XenAPIException, XmlRpcException {
 		Set<VM> vmSet = VM.getByNameLabel(con, vmName);
@@ -62,6 +106,18 @@ public class VMResource extends XenServerConfig implements IVmCpuMod, IVmMemMod 
 			XenAPIException, XmlRpcException {
 		return VM.getByUuid(con, uuid);
 	}
+	public boolean setVMTargetLive(long target) throws
+	       BadServerResponse,
+	       XenAPIException,
+	       XmlRpcException {
+	        String method_call = "VM.set_memory_target_live";
+	        String session = con.getSessionReference();
+	        Object[] method_params = {Marshalling.toXMLRPC(session), Marshalling.toXMLRPC(this.ref), Marshalling.toXMLRPC(target)};
+	        Map response = con.dispatch(method_call, method_params);
+	        return true;
+		
+	}
+	
 
 	static public VM getVMByName(String vmName) throws BadServerResponse,
 			XenAPIException, XmlRpcException {
@@ -174,7 +230,7 @@ public class VMResource extends XenServerConfig implements IVmCpuMod, IVmMemMod 
 	public boolean setVmMemory(long memorySize)
 			throws BadServerResponse, XenAPIException, XmlRpcException {
 		if (isMemoryValid(memorySize))
-			vm.setMemoryDynamicRange(con, (long) memorySize, (long) memorySize);
+			vm.setMemoryDynamicMax(con, (long) memorySize);
 			//vm.setMemoryTargetLive(con, memorySize);
 		return true;
 	}
@@ -196,5 +252,6 @@ public class VMResource extends XenServerConfig implements IVmCpuMod, IVmMemMod 
 			return setVmMemory(memorySize);
 		return false;
 	}
+
 
 }
