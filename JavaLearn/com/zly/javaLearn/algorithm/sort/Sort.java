@@ -9,7 +9,7 @@ package com.zly.javaLearn.algorithm.sort;
 //排序类，默认从小到大
 public class Sort {
 	//冒泡排序
-	public static void bubbleSort(int[] array)
+	public static <T extends Num>  void bubbleSort(T[] array)
 	{
 		int length;
 		length = array.length-1;
@@ -18,7 +18,7 @@ public class Sort {
 			int minIndex = i;
 			for(int j = 0; j <= i; j++)//冒泡
 			{
-				if(array[j] > array[j+1])
+				if(compare(array[j],array[j+1]))
 					swap(array, j, j+1);
 			}
 		}
@@ -205,7 +205,7 @@ public class Sort {
 	 * @param args
 	 */
 	//交换数据
-	public static void swap(int[] array, int i, int j)
+	public static <T> void swap(T[] array, int i, int j)
 	{
 		if(array == null){
 			System.out.println("array is null");
@@ -216,9 +216,16 @@ public class Sort {
 			System.out.println("i "+i+" j"+j+"Length "+array.length);
 			return;
 		}
-		int temp = array[i];
+		T temp = array[i];
 		array[i] = array[j];
 		array[j] = temp;
+	}
+	public <T> boolean compare(T number1, T number2)
+	{
+		if(T.comare(number1, number2))
+			return true;
+		else
+			return false;
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
