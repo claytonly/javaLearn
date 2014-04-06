@@ -89,7 +89,7 @@ public class StartVM extends XenServerConfig{
 				return false;
 			}
 			vm.start(con, false, false);
-			vm.setMemoryDynamicRange(con, (long)1*MEMORY_UNIT, (long)1*MEMORY_UNIT);
+			vm.setMemoryDynamicRange(con, (long)512*MEMORY_UNIT, (long)512*MEMORY_UNIT);
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {

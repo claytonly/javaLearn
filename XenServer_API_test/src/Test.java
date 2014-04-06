@@ -8,7 +8,6 @@ import java.util.Set;
 import org.apache.xmlrpc.XmlRpcException;
 
 import com.xensource.xenapi.Host;
-import com.xensource.xenapi.VMResource;
 import com.xensource.xenapi.Types.BadServerResponse;
 import com.xensource.xenapi.Types.XenAPIException;
 import com.xensource.xenapi.VM;
@@ -20,9 +19,7 @@ public class Test extends SessionStatic{
 
 		String vmName =  "Lmaster";
 		int unit = 1024*1024*1024;
-		VMResource vmResource = new VMResource(vmName);
 		//vmResource.setVmMemory((long) 3*unit);
-		vmResource.setVMTargetLive((long) 3*unit);
 //		System.out.println("cpu "+vmResource.getVmCpu());
 		VM vm = VM.getByNameLabel(con, vmName).iterator().next();
 		//vm.setMemoryStaticMax(con, (long) (3*unit));
